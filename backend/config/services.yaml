@@ -1,0 +1,28 @@
+parameters:
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    App\Controller\AuthController:
+        arguments:
+            $doubleOptIn: '%env(bool:DOUBLE_OPT_IN)%'
+        tags: ['controller.service_arguments']
+
+
+    App\Security\UserChecker:
+        arguments:
+            $doubleOptIn: '%env(bool:DOUBLE_OPT_IN)%'
+
+    App\Service\MailService:
+        arguments:
+            $appUrl: '%env(APP_URL)%'
+            $fromEmail: '%env(FROM_EMAIL)%'
