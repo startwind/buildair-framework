@@ -1,0 +1,7 @@
+subdomains:                                                                                          
+  app:                                                                                               
+    service: frontend                                                                                
+    port: 3000                                                                                       
+  api:                                                                                               
+    service: backend                                                                                 
+    port: 80
