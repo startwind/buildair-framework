@@ -1,0 +1,73 @@
+product:
+  rules:
+    - category: development
+      label: Backend — Symfony 8 + PHP 8.4
+      description: >
+        The backend is Symfony 8 with PHP 8.4. Use AbstractController for all controllers,
+        attribute-based routing (#[Route]), constructor injection for dependencies,
+        and readonly properties for injected services. No other frameworks or micro-frameworks.
+
+    - category: development
+      label: Entities — Doctrine ORM, auto-increment int IDs
+      description: >
+        Entities live in src/Entity/, use PHP 8 attributes for ORM mapping (#[ORM\Entity], #[ORM\Column], etc.).
+        Primary keys are auto-increment integers (#[ORM\GeneratedValue]).
+        Use UUIDs (Symfony\Component\Uid\Uuid::v4()) only for tokens, not as primary keys.
+        All schema changes go through Doctrine Migrations — never alter the DB directly.
+
+    - category: development
+      label: API — REST, JSON, stateless JWT
+      description: >
+        All endpoints live under /api/. Responses are plain JSON objects/arrays via $this->json().
+        The API is stateless; authentication is via JWT (Bearer token in Authorization header).
+        /api/auth/* routes are public. Everything else requires IS_AUTHENTICATED_FULLY.
+        New controllers extend AbstractController and are placed in src/Controller/.
+
+    - category: development
+      label: Auth — JWT RS256, cookie on frontend
+      description: >
+        JWT is issued by lexik/jwt-authentication-bundle (RS256).
+        and sends it as Authorization: Bearer <token> on every API request.
+        Double opt-in email verification is optional, controlled by the DOUBLE_OPT_IN env flag.
+
+    - category: development
+      label: Roles — ROLE_USER, ROLE_ADMIN, isPaying
+      description: >
+        Every registered user gets ROLE_USER automatically. Admin users have ROLE_ADMIN.
+        There is also an isPaying boolean flag on the User entity for paid-tier gating.
+        Use $this->isGranted('ROLE_ADMIN') for admin checks in controllers.
+        Manage roles and paying status via the Symfony console commands in src/Command/.
+
+    - category: development
+      label: Frontend — Nuxt 4, TypeScript, $fetch
+      description: >
+        The frontend is Nuxt 4 (compatibility version 4) with TypeScript.
+        Use $fetch for all API calls, with apiBase from useRuntimeConfig().public.apiBase.
+        Auth state lives in the useAuth() composable (token via useCookie, user via useState).
+        Middleware in app/middleware/ guards authenticated (auth.ts) and guest (guest.ts) routes.
+        Pages are in app/pages/, layouts in app/layouts/, composables in app/composables/.
+
+    - category: development
+      label: Dev environment — Docker Compose, fixed ports
+      description: >
+        Local dev runs via docker-compose.yml (or podman-compose).
+        Ports: Frontend 4000, Backend API 8000, MySQL 3309.
+        Nuxt proxies /api calls to the backend (configured in nuxt.config.ts nitro devProxy).
+        The backend entrypoint auto-runs composer install, JWT key generation, cache clear,
+        and doctrine:migrations:migrate on every container start.
+
+    - category: development
+      label: Database — MySQL 8.4, utf8mb4_unicode_ci
+      description: >
+        MySQL 8.4.9 is the only supported database. Use utf8mb4 with utf8mb4_unicode_ci collation
+        for all tables and columns to avoid FK collation mismatches.
+        Schema changes are always done via Doctrine Migrations (bin/console make:migration,
+        then doctrine:migrations:migrate). Migration files live in migrations/.
+
+    - category: development
+      label: Testing — PHPUnit 11 (Unit + Functional), Playwright E2E
+      description: >
+        Backend: PHPUnit 11 with two suites — Unit (tests/Unit/) and Functional (tests/Functional/).
+        Run via vendor/bin/phpunit. New features get tests in the matching suite.
+        Frontend E2E: Playwright (tests/e2e/), single worker, Chromium only.
+        Run via npm run test:e2e. The test environment uses APP_ENV=test.
