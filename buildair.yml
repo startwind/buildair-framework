@@ -71,3 +71,11 @@ product:
         Run via vendor/bin/phpunit. New features get tests in the matching suite.
         Frontend E2E: Playwright (tests/e2e/), single worker, Chromium only.
         Run via npm run test:e2e. The test environment uses APP_ENV=test.
+
+subdomains:                                                                                          
+  app:                                                                                               
+    service: frontend                                                                                
+    port: 3000                                                                                       
+  api:                                                                                               
+    service: backend                                                                                 
+    port: 80
